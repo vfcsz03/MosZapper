@@ -29,8 +29,8 @@ def logdata():
         dataarray[x,0]= adc.get_last_result()
         dataarray[x,1] = time.time()-startTime
 
-    while (t2-t1 < period) :
-        t2=time.time()
+        while (t2-t1 < period) :
+            t2=time.time()
         t1+=period
     return (dataarray)
 
