@@ -30,7 +30,7 @@ def logdata():
         dataarray[x,1] = time.time()-startTime
 
         while (t2-t1 < period) :
-            t2=time.time()
+                t2=time.time()
         t1+=period
     return (dataarray)
 
@@ -39,18 +39,18 @@ dataSamples = logdata()
 xdata = [column[1] for column in dataSamples[1:len(dataSamples)]]
 ydata = [column[0] for column in dataSamples[1:len(dataSamples)]]
 
-printchoice=raw_input("Do you want to save data to CSV (Y/N): ")
+#printchoice=raw_input("Do you want to save data to CSV (Y/N): ")
 
-if (printchoice == "Y" or "y") :
-		np.savetxt('dataSamples4.txt',dataSamples, fmt='%.3f', delimiter = ',')
+#if (printchoice == "Y" or "y") :
+		#np.savetxt('dataSamples4.txt',dataSamples, fmt='%.3f', delimiter = ',')
 
-t= np.linspace (0, 2, 2 *sps, endpoint=False)
-test=np.sin(25* 2* np.pi * t)
+#t= np.linspace (0, 2, 2 *sps, endpoint=False)
+#test=np.sin(25* 2* np.pi * t)
 fy = fft(ydata)
 freqs = np.fft.fftfreq(len(ydata)) * sps
 
-print "Press ENTER to start plotting on Matlab"	
-raw_input()
+print "Plotting on Matlab"	
+#raw_input()
 	
 fig = plt.figure(1)
 ax1 = fig.add_subplot(211)
@@ -62,6 +62,8 @@ ax2 = fig.add_subplot(212)
 ax2.stem(freqs, np.abs(fy))
 ax2.set_xlabel('Frequency in Hertz [Hz]')
 ax2.set_ylabel('Frequency Domain (Spectrum) Magnitude')
+#ax2.set_xlim(200,800)
+#ax2.set_ylim(0,250000)
 
 plt.show()
 
