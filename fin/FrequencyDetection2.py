@@ -7,11 +7,12 @@ import RPi.GPIO as GPIO
 
 #Pin Def
 detect = 24 #BCM, actual pin 18
+zapOpen = 23 #BCM, actual pin 16
 
 #Pin Config
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(detect, GPIO.IN)
-
+GPIO.setup(zapOpen, GPIO.OUT)
 
 GAIN = 1
 adc = Adafruit_ADS1x15.ADS1015()
@@ -44,7 +45,12 @@ def logdata():
     time.sleep(.05)
 
 def feedback():
+    GPIO.output(zapOpen, GPIO.HIGH)
+    time.sleep(.1)
     zap = GPIO.input(detect)
+    time.sleep(20)
+    GPIO.output(zapOpen, GPIO.LOW)
+    
 ##    zapArray[i]=zap
 ##    np.savetxt('zap.txt',zapArray, fmt='%.3f', delimiter = ',')
     
@@ -63,10 +69,16 @@ def main():
         filteredMagAxis = frequencyMagnitude[np.where(frequencyAxis > 400)]
         
         zapOn = False
+        maximum = 0
+        index = 0
         for i in range(0,len(filteredMagAxis)):
-            if filteredMagAxis[i] > 1000:
-                print(filteredFreqAxis[i])
-                zapOn = True
+            if filteredMagAxis[i] > maximum:
+                maximum = filteredMagAxis[i]
+                index = i
+                
+        if filteredFreqAxis[index] > 500 and filteredFreqAxis[index] < 600:
+            print (filteredFreqAxis[index])
+            zapOn = True
 
         print "Plotting on Matlab"	
 	
@@ -82,10 +94,11 @@ def main():
         ax2.set_ylabel('Frequency Domain (Spectrum) Magnitude')
         plt.show()
                 
-        if zapOn == True:
-            feedback()
+##        if zapOn == True:
+##            feedback()
             
         time.sleep(.05)
+        GPIO.cleanup()
         print ('Done')
     
 main()
